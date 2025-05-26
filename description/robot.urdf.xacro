@@ -40,6 +40,18 @@
     </inertial>
   </xacro:macro>
 
+  <!-- Definindo plugin para publiar a pose do robo -->
+  <gazebo>
+    <plugin filename="libignition-gazebo-pose-publisher-system" name="ignition::gazebo::systems::PosePublisher">
+      <publish_link_pose>false</publish_link_pose>
+      <publish_model_pose>true</publish_model_pose>
+      <publish_nested_model_pose>true</publish_nested_model_pose>
+      <use_pose_vector_msg>false</use_pose_vector_msg>
+      <publish_visual_pose>false</publish_visual_pose>
+      <update_frequency>10</update_frequency>
+    </plugin>
+  </gazebo>
+
   <!-- Definindo a Base do Robô -->
   <link name="base_link">
     <visual>
@@ -147,7 +159,7 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="0.001" w="0.1" d="0.1" h="0.1"/>
+    <xacro:box_inertia m="0.001" w="0.1" d="0.1" h="0.1"/>        
   </link>
 
   <!-- Definindo o sensor IMU no Gazebo -->
