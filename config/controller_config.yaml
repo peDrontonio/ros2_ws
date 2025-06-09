@@ -1,12 +1,21 @@
 controller_manager:
   ros__parameters:
-    update_rate: 50  # Hz
+    update_rate: 30  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
     diff_drive_base_controller:
       type: diff_drive_controller/DiffDriveController
+
+    gripper_controller:
+      type: position_controllers/JointGroupPositionController
+
+gripper_controller:
+  ros__parameters:
+    joints:
+      - gripper_extension
+      - right_gripper_joint
 
 diff_drive_base_controller:
   ros__parameters:

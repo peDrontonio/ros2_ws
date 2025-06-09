@@ -38,7 +38,7 @@ def generate_launch_description():
     diff_drive_params = PathJoinSubstitution([
         FindPackageShare("prm"),
         "config",
-        "diff_drive_controller_velocity.yaml"
+        "controller_config.yaml"
     ])
     
     robot_state_publisher_node = Node(
@@ -76,6 +76,15 @@ def generate_launch_description():
         executable="spawner",
         name="spawner_diff_drive_base_controller",
         arguments=["diff_drive_base_controller"],
+        parameters=[diff_drive_params],
+        output="screen",
+    )
+
+    start_gripper_controller = Node(
+        package="controller_manager",
+        executable="spawner",
+        name="spawner_gripper_controller",
+        arguments=["gripper_controller"],
         parameters=[diff_drive_params],
         output="screen",
     )
@@ -223,9 +232,15 @@ def generate_launch_description():
                 on_exit=[start_diff_controller], # Carrega o sistema de controle das rodas/motores
             )
         ),
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=start_diff_controller,
+                on_exit=[start_gripper_controller],
+            )
+        ),        
         odom_gt,
         robo_mapper,
-        rviz_node,
+        # rviz_node,
   #      relay_odom, # Nodos de redirecionamento de mensagens (Estamos usando apenas odom_gt agora)
         relay_cmd_vel # Nodos de redirecionamento de mensagens
   #      controle
