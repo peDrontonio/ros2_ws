@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="capture_the_flag_world">
 
     <!-- Gerando o SDF:
-        $ xacro empty_arena.sdf.xacro. > arena_2.sdf
+        $ xacro empty_arena.sdf.xacro > empty_arena.sdf
      -->
 
     <!-- Parâmetros globais -->
@@ -35,8 +35,8 @@
     <xacro:property name="flag_pole_length"  value="0.4"/>
     <xacro:property name="flag_panel_size"   value="0.3 0.01 0.2"/>
     <xacro:property name="flag_panel_pose"   value="0.16 0 0.38 0 0 0"/>
-    <xacro:property name="flag_collision_pose" value="0.08 0 0.2 0 0 0"/>
-    <xacro:property name="flag_collision_size" value="0.15 0.15 0.4"/>
+    <xacro:property name="flag_base_radius" value="0.05"/>
+    <xacro:property name="flag_base_thickness" value="0.01"/>
 
     <xacro:macro name="bandeira" params="name x y z rot cor label">
 
@@ -81,11 +81,46 @@
 
                 <!-- Colisão -->
                 <collision name="${name}_collision">
-                    <pose>${flag_collision_pose}</pose>
+                    <pose>0 0 ${flag_pole_length/2} 0 0 0</pose>
                     <geometry>
                     <box>
-                        <size>${flag_collision_size}</size>
+                        <size>${flag_pole_radius*2} ${flag_pole_radius*2} ${flag_pole_length} </size>
                     </box>
+                    </geometry>
+                </collision>
+
+                <!-- Base da bandeira (visual) -->
+                <visual name="base_visual">
+                    <pose>0 0 ${flag_base_thickness/2} 0 0 0</pose>
+                    <geometry>
+                        <cylinder>
+                        <radius>${flag_base_radius}</radius>
+                        <length>${flag_base_thickness}</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>0.1 0.1 0.1 1</ambient>
+                        <diffuse>0.2 0.2 0.2 1</diffuse>
+                    </material>
+                </visual>
+
+                <!-- Base da bandeira (colisão) -->
+                <collision name="base_collision">
+                    <pose>0 0 ${flag_base_thickness/2} 0 0 0</pose>
+                    <geometry>
+                        <box>
+                            <size>${flag_base_radius*2} ${flag_base_radius*2} ${flag_base_thickness} </size>
+                        </box>
+                    </geometry>
+                </collision>
+
+
+                <collision name="top_base_collision">
+                    <pose>0 0 ${flag_pole_length*0.75} 0 0 0</pose>
+                    <geometry>
+                        <box>
+                            <size>${flag_base_radius*2} ${flag_base_radius*2} ${flag_base_thickness} </size>
+                        </box>
                     </geometry>
                 </collision>
 
