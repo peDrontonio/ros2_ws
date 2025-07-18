@@ -5,7 +5,7 @@ Oferecida para os cursos de Engenharia de Computação e áreas afins na **USP S
 
 Este repositório contém o material da disciplina *Programação de Robôs Móveis*, focada no desenvolvimento de soluções em robótica móvel utilizando **ROS 2 Humble** e o simulador **Gazebo Fortress**.
 
-## 📦 Tecnologias utilizadas
+##  Tecnologias utilizadas
 
 - ROS 2 Humble
 - Gazebo Fortress
@@ -15,7 +15,7 @@ Este repositório contém o material da disciplina *Programação de Robôs Móv
 
 ---
 
-## 🚀 Como utilizar o pacote
+##  Como utilizar o pacote
 
 ### 1. Clonar o repositório
 
@@ -54,7 +54,7 @@ source install/local_setup.bash
 
 ---
 
-## 🧪 Executando a simulação
+##  Executando a simulação
 
 ### 1. Iniciar o mundo no Gazebo
 
