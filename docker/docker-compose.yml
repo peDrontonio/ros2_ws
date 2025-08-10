@@ -1,0 +1,50 @@
+services:
+  # Serviço para Ubuntu 20.04 com ROS2 Galactic
+  prm-ubuntu20:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.ubuntu20
+    container_name: prm-galactic-ubuntu20
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${PWD}/..:/ros2_ws/src/prm:rw
+      - prm_home_ubuntu20:/home/ros
+    networks:
+      - ros_network
+    stdin_open: true
+    tty: true
+    privileged: true
+    profiles:
+      - ubuntu20
+
+  # Serviço para Ubuntu 22.04 com ROS2 Humble
+  prm-ubuntu22:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.ubuntu22
+    container_name: prm-humble-ubuntu22
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${PWD}/..:/ros2_ws/src/prm:rw
+      - prm_home_ubuntu22:/home/ros
+    networks:
+      - ros_network
+    stdin_open: true
+    tty: true
+    privileged: true
+    profiles:
+      - ubuntu22
+
+volumes:
+  prm_home_ubuntu20:
+  prm_home_ubuntu22:
+
+networks:
+  ros_network:
+    driver: bridge

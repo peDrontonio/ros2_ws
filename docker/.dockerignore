@@ -1,0 +1,46 @@
+# Docker ignore para otimizar builds
+# Ignorar arquivos desnecessários para reduzir o contexto de build
+
+# Diretórios de build e instalação
+build/
+install/
+log/
+
+# Arquivos temporários
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+
+# Arquivos do Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Arquivos do editor
+.vscode/
+.idea/
+*.sublime-*
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentação gerada
+docs/_build/
+
+# Arquivos de configuração local
+.env
+.env.local

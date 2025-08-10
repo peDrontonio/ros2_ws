@@ -1,0 +1,76 @@
+# Dockerfile para Ubuntu 20.04 com ROS2 Galactic
+FROM osrf/ros:galactic-desktop
+
+# Evitar prompts interativos durante a instalação
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Atualizar sistema e instalar dependências básicas
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y \
+    curl \
+    wget \
+    git \
+    vim \
+    nano \
+    python3-pip \
+    python3-colcon-common-extensions \
+    python3-rosdep \
+    python3-vcstool \
+    software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar Gazebo Garden (compatível com ROS2 Galactic)
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y gz-garden && \
+    rm -rf /var/lib/apt/lists/*
+
+# Instalar dependências específicas do ROS2 para simulação
+RUN apt-get update && apt-get install -y \
+    ros-galactic-gazebo-ros-pkgs \
+    ros-galactic-joint-state-publisher \
+    ros-galactic-joint-state-publisher-gui \
+    ros-galactic-robot-state-publisher \
+    ros-galactic-ros2-control \
+    ros-galactic-ros2-controllers \
+    ros-galactic-rviz2 \
+    ros-galactic-xacro \
+    ros-galactic-turtlesim \
+    ros-galactic-geometry-msgs \
+    ros-galactic-topic-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar dependências para integração ROS2-Gazebo
+RUN apt-get update && apt-get install -y \
+    ros-galactic-ros-gz-bridge \
+    ros-galactic-ros-gz-sim \
+    && rm -rf /var/lib/apt/lists/*
+
+# Criar usuário ros
+RUN useradd -m -s /bin/bash ros && \
+    echo "ros:ros" | chpasswd && \
+    adduser ros sudo && \
+    echo "ros ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Configurar workspace
+USER ros
+WORKDIR /home/ros
+
+# Criar workspace ROS2
+RUN mkdir -p /home/ros/ros2_ws/src
+
+# Configurar environment no bashrc
+RUN echo "source /opt/ros/galactic/setup.bash" >> ~/.bashrc && \
+    echo "source /home/ros/ros2_ws/install/setup.bash" >> ~/.bashrc && \
+    echo "export GZ_VERSION=garden" >> ~/.bashrc && \
+    echo "export GAZEBO_MODEL_PATH=\$GAZEBO_MODEL_PATH:/home/ros/ros2_ws/src/prm/models" >> ~/.bashrc
+
+# Script de entrada
+COPY docker/entrypoint.sh /entrypoint.sh
+USER root
+RUN chmod +x /entrypoint.sh
+USER ros
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/bin/bash"]
