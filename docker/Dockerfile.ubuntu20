@@ -26,9 +26,8 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
     apt-get install -y gz-garden && \
     rm -rf /var/lib/apt/lists/*
 
-# Instalar dependências específicas do ROS2 para simulação
+# Instalar dependências específicas do ROS2 para simulação (sem gazebo-ros-pkgs)
 RUN apt-get update && apt-get install -y \
-    ros-galactic-gazebo-ros-pkgs \
     ros-galactic-joint-state-publisher \
     ros-galactic-joint-state-publisher-gui \
     ros-galactic-robot-state-publisher \
@@ -41,11 +40,8 @@ RUN apt-get update && apt-get install -y \
     ros-galactic-topic-tools \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependências para integração ROS2-Gazebo
-RUN apt-get update && apt-get install -y \
-    ros-galactic-ros-gz-bridge \
-    ros-galactic-ros-gz-sim \
-    && rm -rf /var/lib/apt/lists/*
+# Nota: Para ROS2 Galactic, a integração Gazebo Garden não possui pacotes ros-gz
+# O Gazebo Garden foi instalado separadamente e pode ser usado independentemente
 
 # Criar usuário ros
 RUN useradd -m -s /bin/bash ros && \
